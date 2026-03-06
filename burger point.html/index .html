@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAST Code - Burger Point</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<style>
+    *{
+
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            text-decoration: none;
+            list-style: none;
+            font-family: sans-serif;
+        }
+        .hero{
+
+            min-height : 100vh;
+            background: url("https://thumbs.dreamstime.com/b/tasty-burger-french-fries-fire-close-up-home-made-flames-137249900.jpg?w=992");
+        background-size: cover;
+            background-position: center;
+            background-size: cover;
+
+        }
+        nav{
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            width: 98%;
+            padding: 10px 0;
+            border-bottom: 2px solid #fff;
+            margin: auto;
+        }
+
+        .logo{
+            width: 140px;
+        }
+
+        nav ul {
+            display: flex;
+            align-items: center;
+        }
+
+        nav ul li{
+            margin: 0 20px;
+        }
+        nav ul li a{
+            font-size: 15px;
+            color: #fff;
+            text-transform: uppercase;
+        }
+
+        nav ul li a:hover{
+            color: red;
+            border-bottom: 2px solid red;
+            text-shadow: 0 0 10px red;
+        }
+
+        nav button{
+            padding: 12px 35px;
+            background: transparent;
+            border: 2px solid #fff;
+            color: #fff;
+            font-size: 15px;
+            font-weight: 600;
+            border-radius: 2rem;
+            cursor: pointer;
+            transition: .3s;
+        }
+        nav button:hover{
+            scale: .8;
+            border: 2px solid red;
+            color: red;
+            box-shadow: 0 0 15px red;
+        }
+        .content{
+            position: absolute;
+            top: 35%;
+            left: 90px;
+        }
+        .content h2{
+            color: #fff;
+            font-size: 52px;
+            text-transform: uppercase;
+            font-weight: 800;
+        }
+        .content h2 span{
+            color: red;
+        }
+        p{
+            font-size: 11px;
+            margin-top: 10px;
+            color: #fff;
+        }
+
+        .content button{
+            padding: 12px 45px;
+            margin-top: 50px;
+            border: none;
+            color: #000;
+            background: #fff;
+            border-radius: 2rem;
+            font-weight: 600;
+            font-size: 15px;
+            cursor: pointer;
+            transition: .3s;
+        }
+        .content button:hover{
+            scale:1.1;
+        }
+        button.know_more{
+            border: 2px solid #fff;
+            background: transparent;
+            color: #fff;
+            margin-left: 25px;
+        }
+        button.know_more:hover{
+            scale: .8;
+            border: 2px solid red;
+            color: red;
+            box-shadow: 0 0 25px red;
+        }
+</style>
+<body>
+    <div class="hero">
+        <nav>
+            <img src="https://img.freepik.com/free-vector/burger-mascot-logo-design_779267-1066.jpg?semt=ais_rp_50_assets&w=740&q=80"  class="logo">
+
+            <ul>
+                <li><a href="#">Home</a></li>
+                <li><a href="#">About</a></li>
+                <li><a href="#">Products</a></li>
+                <li><a href="#">stores</a></li>
+                <li><a href="#">Help</a></li>
+            </ul>
+
+            <button>More</button>
+        </nav>
+
+        <div class="content">
+            <h2>Burger that <br> makes life <span>Better</span> </h2>
+            <p>Juicy burger that satisfy every craving! Explore our delicious range and taste the perfection in very bite. <br> Welcome to Burger Point.</p>
+
+            <button>Order Now</button>
+            <button class="know_more">Know More</button>
+        </div>
+    </div>
+
+    </div>
+</body>
+</html>
