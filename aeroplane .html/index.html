@@ -1,0 +1,158 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shoes Website</title>
+
+<style>
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: sans-serif;
+    text-decoration: none;
+    list-style: none;
+}
+
+.hero{
+    min-height: 100vh;
+    background: url(https://mgavia.com/wp-content/uploads/2025/02/Untitled-design-scaled.jpg);
+    background-size: cover;
+    background-position: center;
+    overflow: hidden;
+    position: relative;
+}
+
+nav{
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Top right me shift karne ke liye space-between kiya */
+    border-bottom: 2px solid #fff;
+    width: 98%;
+    margin: auto;
+    padding: 10px 20px; /* Thoda padding add kiya taaki logo aur buttons edge se na chipke */
+}
+.logo{
+    width: 150px;
+}
+
+nav ul{
+    display: flex;
+    align-items: center;
+}
+nav ul li{
+    margin: 0 20px;
+}
+
+nav ul li a{
+    font-size: 17px;
+    color: #fff;
+}
+
+nav ul li a:hover{
+    color: #090707f6;
+    border-bottom: 2px solid #090707f6;
+    
+}
+
+/* Nav wale naye buttons ki css */
+.nav-buttons {
+    display: flex;
+    gap: 15px; /* Dono button ke beech me space */
+}
+
+nav button{
+    padding: 11px 35px;
+    background: #fff; /* Background color white */
+    color: #000;
+    border: none;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: bold;
+    transition: .3s;
+    border-radius: 4px; /* Thoda smooth look ke liye (optional) */
+}
+nav button:hover{
+    scale: .9;
+}
+
+.content{
+    position: absolute;
+    top: 60%; 
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+h2{
+    font-size: 50px;
+    color: #fff;
+    text-transform: uppercase;
+    font-family: 'Times New Roman', Times, serif;
+}
+h2 span{
+    color: #090707f6;
+    text-shadow: 1px 1px  #fff;
+    font-family: 'Times New Roman', Times, serif;
+}
+
+p{
+    color: #fff;
+    font-size: 10px;
+    margin-top: 10px;
+}
+
+.content button{
+    padding: 12px 85px;
+    color:#fff;
+    background: #090707f6;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    margin-top: 50px;
+    transition: .3s;
+
+}
+.content button:hover{
+    scale: 1.1;
+}
+</style>
+</head>
+
+<body>
+
+<div class="hero">
+
+<nav>
+<img src="https://mir-s3-cdn-cf.behance.net/projects/404/f111dc210625859.Y3JvcCw4MDksNjMzLDYsMA.jpg" class="logo">
+
+<ul>
+<li><a href="#">Home</a></li>
+<li><a href="#">Place </a></li>
+<li><a href="#">Tickets</a></li>
+<li><a href="#">Customer care</a></li>
+<li><a href="#">About</a></li>
+</ul>
+
+<div class="nav-buttons">
+    <button>Login</button>
+    <button>Register</button>
+</div>
+</nav>
+
+<div class="content">
+    <button>Book Now</button>
+</div>
+
+<h2>Turn Your Travel Dreams<br> Into Unforgettable <span>Experiences</span> <br>With Us</h2>
+<p>Reach your dream destination with us and experience travel like never before. We take care of every detail of your journey, 
+   <br> ensuring that all your needs and expectations are perfectly fulfilled. As one of the most trusted travel agencies, 
+    <br>we have proudly served more than one lakh satisfied customers, turning their travel dreams into unforgettable memories</p>
+
+</div>
+
+</body>
+</html>
