@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shoes Website</title>
+
+<style>
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: sans-serif;
+    text-decoration: none;
+    list-style: none;
+}
+
+.hero{
+    min-height: 100vh;
+    background: url('https://wallpapercat.com/w/full/8/e/7/607651-3840x2160-desktop-4k-sports-car-background-image.jpg');
+    background-position: center;
+    background-size: cover;   
+    background-repeat: no-repeat; 
+}
+
+nav{
+    display: flex;
+    align-items: center;
+    justify-content: space-between; 
+    border-bottom: 2px solid #fff;
+    width: 98%;
+    margin: auto;
+    padding: 10px 0; 
+}
+
+.logo{
+    width: 100px;
+    margin-left: 30px;
+}
+
+nav ul{
+    display: flex;
+    align-items: center;
+}
+
+nav ul li{
+    margin: 0 20px;
+}
+
+nav ul li a{
+    font-size: 17px;
+    color: #fff;
+    text-transform: uppercase;
+}
+
+nav ul li a:hover{
+    color: #fe40c2;
+    border-bottom: 2px solid #fff;
+    font-weight: 600;
+}
+
+.nav-buttons {
+    display: flex;
+    align-items: center;
+}
+
+.nav-buttons label {
+    color: #fff;
+    margin-right: 10px;
+    font-weight: 600;
+}
+
+.nav-buttons select {
+    padding: 10px;
+    border-radius: 1rem;
+    margin-right: 20px;
+    border: none;
+    outline: none;
+}
+
+nav button{
+    border: none;
+    padding: 12px 35px;
+    background: #fff;
+    color: #0b0a0b;
+    font-weight: 600;
+    border-radius: 2rem;
+    margin-right: 30px;
+    cursor: pointer;
+    transition: .3s;
+}
+
+nav button:hover{
+    background: #000000;
+    color: #fff;
+    border: 2px solid #fff;
+    scale: .9;
+}
+
+.content {
+    color: #fff;
+    text-align: center;
+    padding-top: 150px; 
+}
+
+.content h2 {
+    font-size: 45px;
+    margin-bottom: 20px;
+}
+
+.content p {
+    font-size: 18px;
+    width: 60%;
+    margin: auto;
+    line-height: 1.6;
+}
+
+/* Yahan par top ko 40% kar diya gaya hai niche karne ke liye */
+.content{
+    position:absolute;
+    top: 40%; 
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+}
+
+h2{
+    font-size: 50px;
+    color: #fff;
+    text-transform: uppercase;   
+}
+
+p{
+    margin-top: 10px;
+    font-size: 11px;
+    color: #fff;
+}  
+.content button{
+    margin-top: 50px;
+    padding: 12px 45px;
+    background: #fff;
+    color: #f70a0a;
+    font-weight: 600;  
+    font-size: 15px; 
+    border: none;
+    border-radius: 2rem;
+    cursor: pointer;
+    transition: .3s;
+    
+}
+.content button:hover{
+    background: #000000;
+    color: #fff;
+    border: 2px solid #fff;
+    scale: .9;
+}
+.contentbutton.hover{
+    scale: .9;
+}
+
+.content button.know_more{
+    margin-left: 25px;
+    border: 3px solid #fff;
+    background: transparent;
+
+} 
+</style>
+</head>
+
+<body>
+
+<div class="hero">
+
+<nav>
+<img src="https://e0.pxfuel.com/wallpapers/937/930/desktop-wallpaper-lamborghini-logo-transparent-lamborghini-car-symbol-png-transparent-png-logos-lamborghini-icon.jpg" class="logo">
+
+<ul>
+<li><a href="#">Home</a></li>
+<li><a href="#">About</a></li>
+<li><a href="#">Centers</a></li>
+<li><a href="#">Reviews</a></li>
+<li><a href="#">Price</a></li>
+<li><a href="#">Help</a></li>
+</ul>
+
+
+<div class="nav-buttons">
+
+    <button>More Option
+        <label for="course">:</label>
+    <select name="course" id="course">
+        <option value="login">Login</option>
+        <option value="signup">Sign Up</option>
+        <option value="register">Register</option>
+        <option value="profile">Profile</option>
+        <option value="settings">Settings</option>
+        <option value="logout">Logout</option> 
+    </button>
+    
+    </select>
+    
+    
+</div>
+</nav>
+
+<div class="content">
+    <h2>Explore the World of Luxury Cars</h2>
+    
+   <p>Explore the finest collection of luxury and high-performance cars built for speed, style, and innovation. 
+      Experience the perfect blend of advanced engineering and stunning design that makes every drive unforgettable.</p>
+
+
+      <button>Book Services</button>
+      <button class="know_more">Know More</button>
+
+
+</div>
+
+</div>
+
+</body>
+</html>
