@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Student Grade Calculator</title>
+<style>
+    body {
+        background: #1c1f26;
+        font-family: Arial, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        margin: 0;
+        color: white;
+        padding: 10px;
+    }
+    .container {
+        background: rgba(255, 255, 255, 0.05);
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 20px rgba(0,0,0,0.5);
+        text-align: center;
+        width: 100%;
+        max-width: 500px;
+    }
+    h2 {
+        color: #3db3ff;
+        margin-bottom: 20px;
+        font-size: 1.5rem;
+    }
+    .subject {
+        display: flex;
+        margin-bottom: 10px;
+        gap: 5px;
+        flex-wrap: wrap;
+    }
+    .subject input {
+        flex: 1;
+        padding: 8px;
+        border: none;
+        border-radius: 5px;
+        outline: none;
+        min-width: 100px;
+    }
+    .remove-btn {
+        background: red;
+        border: none;
+        color: white;
+        padding: 0 10px;
+        cursor: pointer;
+        border-radius: 5px;
+        font-weight: bold;
+        transition: background 0.3s;
+    }
+    .remove-btn:hover {
+        background: darkred;
+    }
+    button {
+        background: #3db3ff;
+        color: white;
+        padding: 10px 15px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        margin: 5px;
+        font-weight: bold;
+        transition: background 0.3s;
+    }
+    button:hover {
+        background: #2a91d6;
+    }
+
+    #result-box {
+        margin-top: 20px;
+        background: rgba(255, 255, 255, 0.07);
+        padding: 15px;
+        border-radius: 10px;
+        display: none;
+    }
+    #result-box h3 {
+        margin: 0;
+        font-size: 1.2rem;
+        font-weight: bold;
+    }
+    #percentage {
+        font-size: 2rem;
+        font-weight: bold;
+        color: #3db3ff;
+        margin: 10px 0;
+    }
+    #feedback {
+        font-size: 0.95rem;
+        color: #ccc;
+    }
+
+    @media (max-width: 500px) {
+        .subject {
+            flex-direction: column;
+        }
+        .remove-btn {
+            width: 100%;
+        }
+    }
+</style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Student Grade Calculator</h2>
+
+    <div id="subjects">
+        <div class="subject">
+            <input type="text" placeholder="Subject Name">
+            <input type="number" placeholder="Marks">
+            <button class="remove-btn" onclick="this.parentElement.remove()">❌</button>
+        </div>
+    </div>
+
+    <button onclick="addSubject()">ADD SUBJECT</button>
+    <button onclick="calculateAverage()">CALCULATE AVERAGE</button>
+
+    <!-- Result Section -->
+    <div id="result-box">
+        <h3>Results</h3>
+        <div id="percentage"></div>
+        <div id="feedback"></div>
+    </div>
+</div>
+
+<script>
+    function addSubject() {
+        const subjectsDiv = document.getElementById('subjects');
+        const newSubject = document.createElement('div');
+        newSubject.classList.add('subject');
+        newSubject.innerHTML = `
+            <input type="text" placeholder="Subject Name">
+            <input type="number" placeholder="Marks">
+            <button class="remove-btn" onclick="this.parentElement.remove()">❌</button>
+        `;
+        subjectsDiv.appendChild(newSubject);
+    }
+
+    function calculateAverage() {
+        const marks = document.querySelectorAll('#subjects input[type="number"]');
+        let total = 0, count = 0;
+        
+        marks.forEach(input => {
+            if(input.value !== "") {
+                total += parseFloat(input.value);
+                count++;
+            }
+        });
+
+        if(count === 0) {
+            alert("Please enter at least one subject with marks!");
+            return;
+        }
+
+        let average = total / count;
+        let feedbackText = "";
+
+        if (average >= 90) {
+            feedbackText = "Outstanding performance! Keep it up! 🎉";
+        } else if (average >= 75) {
+            feedbackText = "Good job! You can aim even higher! 💪";
+        } else if (average >= 50) {
+            feedbackText = "Fair performance. You can do better! 👍";
+        } else {
+            feedbackText = "Needs improvement. Keep practicing! 📚";
+        }
+
+        document.getElementById('percentage').textContent = `${average.toFixed(2)}%`;
+        document.getElementById('feedback').textContent = feedbackText;
+
+        document.getElementById('result-box').style.display = 'block';
+    }
+</script>
+
+</body>
+</html>
