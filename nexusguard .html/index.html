@@ -1,0 +1,983 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>NexusGuard — Agentic Phishing & Deepfake Defender</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600&family=Share+Tech+Mono&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --black: #020609;
+    --navy: #040d1a;
+    --blue-deep: #061428;
+    --cyan: #00d4ff;
+    --cyan-dim: #00a8cc;
+    --green: #00ff9d;
+    --green-dim: #00cc7a;
+    --red: #ff2d55;
+    --red-dim: #cc1f3f;
+    --white: #e8f4fd;
+    --muted: #4a7a99;
+    --grid: rgba(0,212,255,0.04);
+    --glow-cyan: 0 0 20px rgba(0,212,255,0.5), 0 0 60px rgba(0,212,255,0.2);
+    --glow-green: 0 0 20px rgba(0,255,157,0.5), 0 0 60px rgba(0,255,157,0.2);
+    --glow-red: 0 0 20px rgba(255,45,85,0.5), 0 0 60px rgba(255,45,85,0.2);
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 17px;
+    overflow-x: hidden;
+    cursor: crosshair;
+  }
+
+  /* ── GRID BACKGROUND ── */
+  body::before {
+    content:'';
+    position:fixed; inset:0; z-index:0;
+    background-image:
+      linear-gradient(var(--grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+    background-size: 48px 48px;
+    pointer-events:none;
+  }
+
+  /* ── SCANLINES ── */
+  body::after {
+    content:'';
+    position:fixed; inset:0; z-index:1;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0,0,0,0.07) 2px,
+      rgba(0,0,0,0.07) 4px
+    );
+    pointer-events:none;
+  }
+
+  section, header, footer { position:relative; z-index:2; }
+
+  /* ── NAVBAR ── */
+  nav {
+    position:fixed; top:0; left:0; right:0; z-index:100;
+    display:flex; align-items:center; justify-content:space-between;
+    padding: 16px 48px;
+    background: rgba(2,6,9,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(0,212,255,0.15);
+  }
+  .nav-logo {
+    font-family:'Orbitron',monospace;
+    font-size:1.1rem; font-weight:900;
+    color:var(--cyan);
+    letter-spacing:3px;
+    text-shadow: var(--glow-cyan);
+  }
+  .nav-logo span { color:var(--green); }
+  .nav-links { display:flex; gap:32px; list-style:none; }
+  .nav-links a {
+    font-family:'Share Tech Mono',monospace;
+    font-size:0.78rem; color:var(--muted);
+    text-decoration:none; letter-spacing:2px;
+    transition: color .25s, text-shadow .25s;
+  }
+  .nav-links a:hover { color:var(--cyan); text-shadow: var(--glow-cyan); }
+  .nav-badge {
+    font-family:'Share Tech Mono',monospace;
+    font-size:0.7rem; color:var(--green);
+    border:1px solid var(--green);
+    padding:4px 12px; letter-spacing:2px;
+    box-shadow: var(--glow-green);
+    animation: pulse-badge 2s infinite;
+  }
+  @keyframes pulse-badge {
+    0%,100% { opacity:1; } 50% { opacity:.6; }
+  }
+
+  /* ── HERO ── */
+  #hero {
+    min-height:100vh;
+    display:flex; flex-direction:column;
+    align-items:center; justify-content:center;
+    text-align:center;
+    padding: 120px 24px 80px;
+    position:relative; overflow:hidden;
+  }
+
+  .hero-orb {
+    position:absolute;
+    border-radius:50%;
+    filter:blur(80px);
+    pointer-events:none;
+  }
+  .orb1 { width:500px; height:500px; background:rgba(0,212,255,0.06); top:-100px; left:-100px; }
+  .orb2 { width:400px; height:400px; background:rgba(0,255,157,0.05); bottom:-80px; right:-80px; }
+  .orb3 { width:300px; height:300px; background:rgba(255,45,85,0.04); top:40%; left:50%; transform:translate(-50%,-50%); }
+
+  .hero-tag {
+    font-family:'Share Tech Mono',monospace;
+    font-size:0.72rem; letter-spacing:4px;
+    color:var(--red); text-transform:uppercase;
+    border:1px solid rgba(255,45,85,0.4);
+    padding:6px 20px; margin-bottom:32px;
+    display:inline-block;
+    animation: fadeSlideDown .8s ease both;
+  }
+
+  h1 {
+    font-family:'Orbitron',monospace;
+    font-size: clamp(2.4rem, 6vw, 5rem);
+    font-weight:900; line-height:1.05;
+    letter-spacing:-1px;
+    animation: fadeSlideDown .9s .1s ease both;
+  }
+  h1 .nexus { color:var(--cyan); text-shadow: var(--glow-cyan); }
+  h1 .guard { color:var(--green); text-shadow: var(--glow-green); }
+
+  .hero-sub {
+    font-size:1.15rem; font-weight:300; letter-spacing:3px;
+    color:var(--muted); margin-top:16px; text-transform:uppercase;
+    animation: fadeSlideDown 1s .2s ease both;
+  }
+
+  .hero-desc {
+    max-width:640px; margin:32px auto 0;
+    font-size:1.1rem; line-height:1.8;
+    color:rgba(232,244,253,0.7);
+    animation: fadeSlideDown 1s .3s ease both;
+  }
+
+  .hero-cta {
+    display:flex; gap:20px; margin-top:48px; flex-wrap:wrap; justify-content:center;
+    animation: fadeSlideDown 1s .4s ease both;
+  }
+  .btn-primary {
+    font-family:'Orbitron',monospace;
+    font-size:0.8rem; font-weight:700; letter-spacing:3px;
+    padding:14px 36px;
+    background: linear-gradient(135deg, var(--cyan), var(--green));
+    color:var(--black); border:none; cursor:pointer;
+    clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+    transition: all .3s; text-decoration:none; display:inline-block;
+  }
+  .btn-primary:hover { transform:translateY(-3px); box-shadow: var(--glow-cyan); }
+  .btn-outline {
+    font-family:'Share Tech Mono',monospace;
+    font-size:0.8rem; letter-spacing:3px;
+    padding:14px 36px;
+    background:transparent; color:var(--cyan);
+    border:1px solid rgba(0,212,255,0.5);
+    cursor:pointer; text-decoration:none; display:inline-block;
+    transition:all .3s;
+  }
+  .btn-outline:hover { background:rgba(0,212,255,0.08); box-shadow: var(--glow-cyan); }
+
+  /* ── THREAT TICKER ── */
+  .ticker-wrap {
+    width:100%; overflow:hidden;
+    border-top:1px solid rgba(255,45,85,0.2);
+    border-bottom:1px solid rgba(255,45,85,0.2);
+    background:rgba(255,45,85,0.04);
+    padding:12px 0; margin:0;
+  }
+  .ticker {
+    display:flex; white-space:nowrap;
+    animation: ticker 30s linear infinite;
+  }
+  .ticker-item {
+    font-family:'Share Tech Mono',monospace;
+    font-size:0.75rem; color:var(--red);
+    letter-spacing:2px; padding:0 48px;
+  }
+  .ticker-item::before { content:'⚠ '; }
+  @keyframes ticker {
+    0% { transform:translateX(0); }
+    100% { transform:translateX(-50%); }
+  }
+
+  /* ── SECTIONS COMMON ── */
+  section { padding:100px 48px; }
+  .section-label {
+    font-family:'Share Tech Mono',monospace;
+    font-size:0.7rem; letter-spacing:4px;
+    color:var(--cyan); text-transform:uppercase;
+    margin-bottom:12px;
+  }
+  h2 {
+    font-family:'Orbitron',monospace;
+    font-size: clamp(1.6rem, 3.5vw, 2.8rem);
+    font-weight:700; line-height:1.2;
+    margin-bottom:48px;
+  }
+  .cyan { color:var(--cyan); }
+  .green { color:var(--green); }
+  .red { color:var(--red); }
+
+  /* ── PROBLEM SECTION ── */
+  #problem { background: linear-gradient(180deg, var(--black), var(--navy)); }
+  .problem-grid {
+    display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr));
+    gap:24px; max-width:1100px; margin:0 auto;
+  }
+  .problem-card {
+    border:1px solid rgba(255,45,85,0.2);
+    background: rgba(255,45,85,0.04);
+    padding:36px 32px;
+    position:relative; overflow:hidden;
+    transition: border-color .3s, transform .3s;
+    opacity:0; transform:translateY(30px);
+    transition: opacity .6s ease, transform .6s ease, border-color .3s;
+  }
+  .problem-card.visible { opacity:1; transform:translateY(0); }
+  .problem-card:hover { border-color:rgba(255,45,85,0.6); transform:translateY(-6px); }
+  .problem-card::before {
+    content:'';
+    position:absolute; top:0; left:0; right:0; height:2px;
+    background:linear-gradient(90deg, transparent, var(--red), transparent);
+  }
+  .card-icon {
+    font-size:2.2rem; margin-bottom:16px; display:block;
+  }
+  .card-title {
+    font-family:'Orbitron',monospace;
+    font-size:1rem; font-weight:700;
+    color:var(--red); letter-spacing:1px; margin-bottom:12px;
+  }
+  .card-text { font-size:1rem; line-height:1.75; color:rgba(232,244,253,0.7); }
+
+  /* ── SOLUTION SECTION ── */
+  #solution { background: var(--navy); }
+  .solution-hero {
+    max-width:720px; margin:0 auto 60px;
+    text-align:center;
+    font-size:1.15rem; line-height:1.8;
+    color:rgba(232,244,253,0.75);
+    font-style:italic;
+    border-left:3px solid var(--cyan);
+    border-right:3px solid var(--cyan);
+    padding:24px 40px;
+    background:rgba(0,212,255,0.03);
+  }
+  .features-grid {
+    display:grid; grid-template-columns:repeat(auto-fit, minmax(300px, 1fr));
+    gap:24px; max-width:1100px; margin:0 auto;
+  }
+  .feature-card {
+    border:1px solid rgba(0,212,255,0.15);
+    background: rgba(0,212,255,0.03);
+    padding:36px 32px;
+    position:relative;
+    opacity:0; transform:translateX(-20px);
+    transition: opacity .6s ease, transform .6s ease;
+  }
+  .feature-card.visible { opacity:1; transform:translateX(0); }
+  .feature-card:hover { border-color:rgba(0,212,255,0.5); background:rgba(0,212,255,0.06); }
+  .feature-card::after {
+    content:'';
+    position:absolute; bottom:0; left:0; right:0; height:2px;
+    background:linear-gradient(90deg, transparent, var(--cyan), transparent);
+    transform:scaleX(0); transition:transform .4s;
+  }
+  .feature-card:hover::after { transform:scaleX(1); }
+  .feat-num {
+    font-family:'Share Tech Mono',monospace;
+    font-size:0.65rem; color:var(--cyan);
+    letter-spacing:3px; margin-bottom:12px; display:block;
+  }
+  .feat-title {
+    font-family:'Orbitron',monospace;
+    font-size:1rem; font-weight:700;
+    color:var(--cyan); margin-bottom:12px;
+  }
+
+  /* ── HOW IT WORKS ── */
+  #how { background:linear-gradient(180deg, var(--navy), var(--blue-deep)); }
+  .pipeline {
+    display:flex; align-items:center; justify-content:center;
+    flex-wrap:wrap; gap:0; max-width:1100px; margin:0 auto 60px;
+  }
+  .pipe-step {
+    text-align:center; flex:1; min-width:180px;
+    opacity:0; transform:scale(.85);
+    transition:opacity .5s ease, transform .5s ease;
+  }
+  .pipe-step.visible { opacity:1; transform:scale(1); }
+  .pipe-dot {
+    width:72px; height:72px; border-radius:50%;
+    border:2px solid var(--cyan);
+    display:flex; align-items:center; justify-content:center;
+    margin:0 auto 16px;
+    font-family:'Orbitron',monospace; font-size:1.3rem; font-weight:900;
+    color:var(--cyan);
+    background:rgba(0,212,255,0.08);
+    box-shadow: var(--glow-cyan);
+    position:relative; z-index:1;
+    transition:background .3s, transform .3s;
+  }
+  .pipe-step:hover .pipe-dot { background:rgba(0,212,255,0.2); transform:scale(1.1); }
+  .pipe-label {
+    font-family:'Orbitron',monospace;
+    font-size:0.75rem; font-weight:700;
+    color:var(--white); letter-spacing:1px; margin-bottom:8px;
+  }
+  .pipe-desc { font-size:0.88rem; color:var(--muted); line-height:1.6; padding:0 8px; }
+  .pipe-arrow {
+    color:var(--cyan); font-size:1.4rem; padding:0 8px;
+    flex-shrink:0; opacity:.5;
+  }
+
+  .loop-badge {
+    display:block; text-align:center; margin-top:32px;
+    font-family:'Share Tech Mono',monospace;
+    font-size:0.85rem; letter-spacing:3px;
+    color:var(--green);
+    padding:16px;
+    border:1px solid rgba(0,255,157,0.3);
+    max-width:600px; margin:32px auto 0;
+    background:rgba(0,255,157,0.04);
+    box-shadow: var(--glow-green);
+  }
+
+  /* ── TECH STACK ── */
+  #tech { background:var(--blue-deep); }
+  .tech-grid {
+    display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));
+    gap:20px; max-width:1100px; margin:0 auto;
+  }
+  .tech-card {
+    border:1px solid rgba(0,212,255,0.1);
+    padding:28px 24px;
+    background: rgba(6,20,40,0.8);
+    opacity:0; transform:translateY(20px);
+    transition:opacity .5s ease, transform .5s ease;
+    position:relative;
+  }
+  .tech-card.visible { opacity:1; transform:translateY(0); }
+  .tech-card:hover { border-color:var(--cyan); }
+  .tech-tag {
+    font-family:'Share Tech Mono',monospace;
+    font-size:0.65rem; color:var(--muted); letter-spacing:3px;
+    display:block; margin-bottom:10px;
+  }
+  .tech-name {
+    font-family:'Orbitron',monospace; font-size:0.95rem; font-weight:700;
+    color:var(--cyan); margin-bottom:8px;
+  }
+  .tech-desc { font-size:0.9rem; color:rgba(232,244,253,0.6); line-height:1.6; }
+
+  /* ── METRICS ── */
+  #metrics { background:linear-gradient(180deg, var(--blue-deep), var(--navy)); }
+  .metrics-grid {
+    display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr));
+    gap:24px; max-width:1000px; margin:0 auto;
+  }
+  .metric-card {
+    text-align:center; padding:48px 24px;
+    border:1px solid rgba(0,255,157,0.2);
+    background:rgba(0,255,157,0.03);
+    opacity:0; transform:scale(.9);
+    transition:opacity .6s ease, transform .6s ease;
+  }
+  .metric-card.visible { opacity:1; transform:scale(1); }
+  .metric-num {
+    font-family:'Orbitron',monospace;
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    font-weight:900; color:var(--green);
+    text-shadow: var(--glow-green);
+    display:block; line-height:1;
+    margin-bottom:12px;
+  }
+  .metric-label {
+    font-family:'Share Tech Mono',monospace;
+    font-size:0.75rem; letter-spacing:3px;
+    color:var(--muted); text-transform:uppercase;
+  }
+
+  /* ── SDG ── */
+  #sdg { background:var(--navy); }
+  .sdg-grid {
+    display:grid; grid-template-columns:repeat(auto-fit, minmax(320px, 1fr));
+    gap:24px; max-width:1000px; margin:0 auto 40px;
+  }
+  .sdg-card {
+    padding:36px 32px;
+    border:1px solid rgba(0,212,255,0.15);
+    background:rgba(0,212,255,0.03);
+    opacity:0; transform:translateY(20px);
+    transition:opacity .5s ease, transform .5s ease;
+  }
+  .sdg-card.visible { opacity:1; transform:translateY(0); }
+  .sdg-num {
+    font-family:'Orbitron',monospace; font-size:0.75rem;
+    color:var(--cyan); letter-spacing:3px; display:block; margin-bottom:10px;
+  }
+  .sdg-title {
+    font-family:'Orbitron',monospace; font-size:1.05rem; font-weight:700;
+    color:var(--white); margin-bottom:14px;
+  }
+  .sectors {
+    margin-top:32px;
+    font-family:'Share Tech Mono',monospace; font-size:0.8rem;
+    text-align:center; color:var(--cyan); letter-spacing:2px;
+    padding:16px; border:1px solid rgba(0,212,255,0.2);
+    background:rgba(0,212,255,0.04);
+    max-width:700px; margin:32px auto 0;
+  }
+
+  /* ── ROADMAP ── */
+  #roadmap { background:linear-gradient(180deg, var(--navy), var(--black)); }
+  .roadmap-items {
+    display:flex; flex-direction:column; gap:0;
+    max-width:800px; margin:0 auto;
+    position:relative;
+  }
+  .roadmap-items::before {
+    content:'';
+    position:absolute; left:23px; top:0; bottom:0; width:2px;
+    background:linear-gradient(180deg, var(--cyan), var(--green), var(--cyan));
+  }
+  .roadmap-item {
+    display:flex; gap:32px; padding:32px 0;
+    opacity:0; transform:translateX(30px);
+    transition:opacity .6s ease, transform .6s ease;
+  }
+  .roadmap-item.visible { opacity:1; transform:translateX(0); }
+  .rm-dot {
+    width:48px; height:48px; border-radius:50%;
+    background:var(--navy); border:2px solid var(--cyan);
+    display:flex; align-items:center; justify-content:center;
+    flex-shrink:0;
+    font-family:'Orbitron',monospace; font-size:.9rem; font-weight:900;
+    color:var(--cyan);
+    box-shadow: var(--glow-cyan);
+  }
+  .rm-phase {
+    font-family:'Share Tech Mono',monospace; font-size:0.7rem;
+    color:var(--green); letter-spacing:3px; margin-bottom:6px;
+  }
+  .rm-title {
+    font-family:'Orbitron',monospace; font-size:1.05rem; font-weight:700;
+    color:var(--white); margin-bottom:10px;
+  }
+
+  /* ── QUOTE ── */
+  .big-quote {
+    text-align:center; padding:80px 48px;
+    background:linear-gradient(135deg, rgba(0,212,255,0.05), rgba(0,255,157,0.05));
+    border-top:1px solid rgba(0,212,255,0.1);
+    border-bottom:1px solid rgba(0,212,255,0.1);
+  }
+  .big-quote blockquote {
+    font-family:'Orbitron',monospace;
+    font-size: clamp(1.2rem, 2.5vw, 2rem);
+    font-weight:700;
+    color:var(--white);
+    max-width:800px; margin:0 auto;
+    line-height:1.5;
+  }
+  .big-quote blockquote::before,
+  .big-quote blockquote::after {
+    content:'"';
+    color:var(--cyan);
+    font-size:3rem; line-height:0; vertical-align:-.4em;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    background:var(--black);
+    border-top:1px solid rgba(0,212,255,0.1);
+    padding:40px 48px;
+    display:flex; align-items:center; justify-content:space-between;
+    flex-wrap:wrap; gap:16px;
+  }
+  .footer-logo {
+    font-family:'Orbitron',monospace; font-size:.9rem; font-weight:900;
+    color:var(--cyan); letter-spacing:3px;
+  }
+  .footer-tag {
+    font-family:'Share Tech Mono',monospace; font-size:0.72rem;
+    color:var(--muted); letter-spacing:2px;
+  }
+  .footer-badge {
+    font-family:'Share Tech Mono',monospace; font-size:0.7rem;
+    color:var(--green); border:1px solid rgba(0,255,157,0.3);
+    padding:6px 16px; letter-spacing:2px;
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeSlideDown {
+    from { opacity:0; transform:translateY(-20px); }
+    to   { opacity:1; transform:translateY(0); }
+  }
+
+  /* ── GLITCH EFFECT on h1 ── */
+  h1 { position:relative; }
+  h1::after {
+    content:attr(data-text);
+    position:absolute; left:2px; top:0;
+    color:var(--red);
+    clip-path:polygon(0 30%,100% 30%,100% 50%,0 50%);
+    opacity:0;
+    animation:glitch 6s infinite;
+  }
+  @keyframes glitch {
+    0%,90%,100% { opacity:0; transform:translateX(0); }
+    92% { opacity:.4; transform:translateX(-4px); }
+    94% { opacity:.4; transform:translateX(4px); }
+    96% { opacity:0; }
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width:768px) {
+    nav { padding:14px 20px; }
+    .nav-links { display:none; }
+    section { padding:60px 20px; }
+    .pipe-arrow { display:none; }
+    footer { flex-direction:column; text-align:center; }
+  }
+
+  /* ── CUSTOM SCROLLBAR ── */
+  ::-webkit-scrollbar { width:6px; }
+  ::-webkit-scrollbar-track { background:var(--black); }
+  ::-webkit-scrollbar-thumb { background:var(--cyan); }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">NEXUS<span>GUARD</span></div>
+  <ul class="nav-links">
+    <li><a href="#problem">THREAT</a></li>
+    <li><a href="#solution">SOLUTION</a></li>
+    <li><a href="#how">PIPELINE</a></li>
+    <li><a href="#tech">STACK</a></li>
+    <li><a href="#roadmap">ROADMAP</a></li>
+  </ul>
+  <div class="nav-badge">● LIVE DEFENSE</div>
+</nav>
+
+<!-- HERO -->
+<header id="hero">
+  <div class="hero-orb orb1"></div>
+  <div class="hero-orb orb2"></div>
+  <div class="hero-orb orb3"></div>
+
+  <div class="hero-tag">⬡ CYBERSECURITY TRACK</div>
+
+  <h1 data-text="NEXUSGUARD">
+    <span class="nexus">NEXUS</span><span class="guard">GUARD</span>
+  </h1>
+  <p class="hero-sub">Agentic Phishing &amp; Deepfake Defender</p>
+  <p class="hero-desc">
+    Combating autonomous social engineering with multi-modal agentic AI —
+    protecting the digital perimeter in the age of synthetic deception.
+  </p>
+  <div class="hero-cta">
+    <a href="#solution" class="btn-primary">EXPLORE SYSTEM</a>
+    <a href="#how" class="btn-outline">VIEW PIPELINE</a>
+  </div>
+</header>
+
+<!-- THREAT TICKER -->
+<div class="ticker-wrap">
+  <div class="ticker">
+    <span class="ticker-item">AI AGENTS LAUNCHING MILLIONS OF PHISHING ATTEMPTS SIMULTANEOUSLY</span>
+    <span class="ticker-item">DEEPFAKE AUDIO &amp; VIDEO RENDERING VISUAL VERIFICATION OBSOLETE</span>
+    <span class="ticker-item">TRADITIONAL SECURITY FILTERS CANNOT PACE ADAPTIVE AI CONVERSATIONS</span>
+    <span class="ticker-item">SYNTHETIC DECEPTION TARGETING HEALTHCARE · FINANCE · EDUCATION</span>
+    <span class="ticker-item">AI AGENTS LAUNCHING MILLIONS OF PHISHING ATTEMPTS SIMULTANEOUSLY</span>
+    <span class="ticker-item">DEEPFAKE AUDIO &amp; VIDEO RENDERING VISUAL VERIFICATION OBSOLETE</span>
+    <span class="ticker-item">TRADITIONAL SECURITY FILTERS CANNOT PACE ADAPTIVE AI CONVERSATIONS</span>
+    <span class="ticker-item">SYNTHETIC DECEPTION TARGETING HEALTHCARE · FINANCE · EDUCATION</span>
+  </div>
+</div>
+
+<!-- PROBLEM -->
+<section id="problem">
+  <div style="text-align:center;max-width:900px;margin:0 auto">
+    <div class="section-label">// THREAT LANDSCAPE</div>
+    <h2>Phishing <span class="red">3.0</span>: The Rise of<br>Autonomous Attacks</h2>
+  </div>
+  <div class="problem-grid">
+    <div class="problem-card">
+      <span class="card-icon">🤖</span>
+      <div class="card-title">GENERATIVE SCALE</div>
+      <p class="card-text">AI agents now launch millions of hyper-personalized phishing attempts simultaneously — at a pace no human team can match.</p>
+    </div>
+    <div class="problem-card">
+      <span class="card-icon">🎭</span>
+      <div class="card-title">THE IDENTITY GAP</div>
+      <p class="card-text">High-fidelity deepfake audio and video have rendered traditional "visual verification" completely obsolete.</p>
+    </div>
+    <div class="problem-card">
+      <span class="card-icon">⏱</span>
+      <div class="card-title">HUMAN LATENCY</div>
+      <p class="card-text">Traditional security filters cannot keep pace with adaptive, real-time AI-driven conversations that evolve mid-attack.</p>
+    </div>
+  </div>
+</section>
+
+<!-- SOLUTION -->
+<section id="solution">
+  <div style="text-align:center;max-width:900px;margin:0 auto">
+    <div class="section-label">// NEXUSGUARD SYSTEM</div>
+    <h2>Introducing <span class="cyan">NexusGuard</span></h2>
+  </div>
+  <div class="solution-hero">
+    A proactive, stateful AI agent that doesn't just block — it <strong>investigates, interrogates, and neutralizes</strong> threats before they reach your people.
+  </div>
+  <div class="features-grid">
+    <div class="feature-card">
+      <span class="feat-num">// 01</span>
+      <div class="feat-title">🧠 BEHAVIORAL INTELLIGENCE</div>
+      <p class="card-text">Analyzes linguistic patterns to detect emotional manipulation, urgency triggers, and social engineering tactics in real time.</p>
+    </div>
+    <div class="feature-card">
+      <span class="feat-num">// 02</span>
+      <div class="feat-title">📡 STREAM INTEGRITY</div>
+      <p class="card-text">Real-time analysis of video and audio packets to detect synthetic artifacts invisible to the human eye and ear.</p>
+    </div>
+    <div class="feature-card">
+      <span class="feat-num">// 03</span>
+      <div class="feat-title">🔐 AUTOMATED INTERROGATION</div>
+      <p class="card-text">A dedicated "Blue Team" agent challenges suspicious senders to verify identity through secure, automated handshake protocols.</p>
+    </div>
+  </div>
+  <div class="terminal-container visible" style="max-width:900px; margin: 40px auto; background: var(--black); border: 1px solid var(--cyan); padding: 20px; font-family: 'Share Tech Mono', monospace; box-shadow: var(--glow-cyan);">
+  <div style="color: var(--cyan); border-bottom: 1px solid rgba(0,212,255,0.3); padding-bottom: 10px; margin-bottom: 15px; display: flex; justify-content: space-between;">
+    <span>[NEXUSGUARD_INTERROGATOR_v1.0]</span>
+    <span id="terminal-status" style="color: var(--green);">LISTENING...</span>
+  </div>
+  <div id="terminal-body" style="height: 200px; overflow-y: hidden; font-size: 0.9rem; line-height: 1.4; color: var(--white);">
+    </div>
+</div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="how">
+  <div style="text-align:center;max-width:900px;margin:0 auto">
+    <div class="section-label">// ORCHESTRATION LOOP</div>
+    <h2>How It <span class="green">Works</span></h2>
+  </div>
+  <div class="pipeline">
+    <div class="pipe-step">
+      <div class="pipe-dot">P</div>
+      <div class="pipe-label">PERCEPTION LAYER</div>
+      <p class="pipe-desc">Monitor Email, Slack, Zoom streams across all channels</p>
+    </div>
+    <div class="pipe-arrow">→</div>
+    <div class="pipe-step">
+      <div class="pipe-dot">C</div>
+      <div class="pipe-label">COGNITIVE LAYER</div>
+      <p class="pipe-desc">LangGraph / AutoGPT evaluates intent &amp; context</p>
+    </div>
+    <div class="pipe-arrow">→</div>
+    <div class="pipe-step">
+      <div class="pipe-dot">V</div>
+      <div class="pipe-label">CROSS-VERIFICATION</div>
+      <p class="pipe-desc">BigQuery checks reputation, metadata &amp; history</p>
+    </div>
+    <div class="pipe-arrow">→</div>
+    <div class="pipe-step">
+      <div class="pipe-dot">A</div>
+      <div class="pipe-label">ACTION ENGINE</div>
+      <p class="pipe-desc">Neutralize, quarantine or escalate in milliseconds</p>
+    </div>
+  </div>
+  <div class="loop-badge">
+    ↺ CONTINUOUS CLOSED-LOOP — PERCEIVE · REASON · VERIFY · EXECUTE
+  </div>
+</section>
+
+<!-- TECH STACK -->
+<section id="tech">
+  <div style="text-align:center;max-width:900px;margin:0 auto">
+    <div class="section-label">// POWERED BY GOOGLE CLOUD</div>
+    <h2>Technology <span class="cyan">Stack</span></h2>
+  </div>
+  <div class="tech-grid">
+    <div class="tech-card">
+      <span class="tech-tag">// COMPUTE</span>
+      <div class="tech-name">Cloud Run</div>
+      <p class="tech-desc">Scalable, containerized agent hosting with zero cold-start latency.</p>
+    </div>
+    <div class="tech-card">
+      <span class="tech-tag">// INTELLIGENCE</span>
+      <div class="tech-name">Gemini 1.5 Pro</div>
+      <p class="tech-desc">Context-aware analysis and human-readable risk alerts at enterprise scale.</p>
+    </div>
+    <div class="tech-card">
+      <span class="tech-tag">// STORAGE</span>
+      <div class="tech-name">BigQuery</div>
+      <p class="tech-desc">Storing threat vectors, sender fingerprints, and behavioral baselines.</p>
+    </div>
+    <div class="tech-card">
+      <span class="tech-tag">// DETECTION</span>
+      <div class="tech-name">Vertex AI</div>
+      <p class="tech-desc">Training custom Small Language Models for ultra-low-latency threat detection.</p>
+    </div>
+    <div class="tech-card">
+      <span class="tech-tag">// AGENT FRAMEWORK</span>
+      <div class="tech-name">LangGraph</div>
+      <p class="tech-desc">Orchestrates multi-step agentic reasoning loops across communication channels.</p>
+    </div>
+    <div class="tech-card">
+      <span class="tech-tag">// AUTOMATION</span>
+      <div class="tech-name">AutoGPT</div>
+      <p class="tech-desc">Autonomous agent workflows for interrogation and identity verification protocols.</p>
+    </div>
+  </div>
+</section>
+
+<!-- METRICS -->
+<section id="metrics">
+  <div style="text-align:center;max-width:900px;margin:0 auto">
+    <div class="section-label">// GREEN SECURITY</div>
+    <h2>Optimized for the <span class="green">Future</span></h2>
+  </div>
+  <div class="metrics-grid">
+    <div class="metric-card">
+      <span class="metric-num">~60%</span>
+      <span class="metric-label">Energy Reduction<br>via Quantized Models</span>
+    </div>
+    <div class="metric-card">
+      <span class="metric-num">24/7</span>
+      <span class="metric-label">Carbon-Aware<br>Scaling</span>
+    </div>
+    <div class="metric-card">
+      <span class="metric-num">0</span>
+      <span class="metric-label">Manual SOC<br>Overhead</span>
+    </div>
+  </div>
+</section>
+
+<!-- SDG -->
+<section id="sdg">
+  <div style="text-align:center;max-width:900px;margin:0 auto">
+    <div class="section-label">// GLOBAL IMPACT</div>
+    <h2>Contributing to a Safer, More <span class="cyan">Sustainable</span> World</h2>
+  </div>
+  <div class="sdg-grid">
+    <div class="sdg-card">
+      <span class="sdg-num">SDG 9</span>
+      <div class="sdg-title">Industry, Innovation &amp; Infrastructure</div>
+      <p class="card-text">Building resilient digital infrastructure capable of withstanding AI-powered cyber-warfare and large-scale disinformation campaigns targeting critical systems.</p>
+    </div>
+    <div class="sdg-card">
+      <span class="sdg-num">SDG 16</span>
+      <div class="sdg-title">Peace, Justice &amp; Strong Institutions</div>
+      <p class="card-text">Reducing financial fraud and identity theft in local communities by neutralizing deepfake-based social engineering before it causes harm.</p>
+    </div>
+  </div>
+  <div class="sectors">
+    ⬥ PRIORITY SECTORS: HEALTHCARE · FINANCE · EDUCATION ⬥
+  </div>
+</section>
+
+<!-- ROADMAP -->
+<section id="roadmap">
+  <div style="text-align:center;max-width:900px;margin:0 auto">
+    <div class="section-label">// EVOLUTION</div>
+    <h2>The Future of <span class="cyan">NexusGuard</span></h2>
+  </div>
+  <div class="roadmap-items">
+    <div class="roadmap-item">
+      <div class="rm-dot">1</div>
+      <div class="rm-content">
+        <div class="rm-phase">// PHASE 1 — NOW</div>
+        <div class="rm-title">Multi-Modal Agentic Defense</div>
+        <p class="card-text">Real-time defense across Email, Slack, and Zoom with Gemini-powered risk assessment and autonomous agent response.</p>
+      </div>
+    </div>
+    <div class="roadmap-item">
+      <div class="rm-dot">2</div>
+      <div class="rm-content">
+        <div class="rm-phase">// PHASE 2 — NEAR-TERM</div>
+        <div class="rm-title">Wearable &amp; AR Integration</div>
+        <p class="card-text">Integration with wearable tech and AR for real-time "in-ear" phishing alerts during live conversations — invisible protection.</p>
+      </div>
+    </div>
+    <div class="roadmap-item">
+      <div class="rm-dot">3</div>
+      <div class="rm-content">
+        <div class="rm-phase">// PHASE 3 — VISION</div>
+        <div class="rm-title">Decentralized Identity Verification</div>
+        <p class="card-text">Zero-trust environments at enterprise scale, powered by decentralized identity verification on distributed infrastructure.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- QUOTE -->
+<div class="big-quote">
+  <blockquote>
+    The only way to beat an AI agent is with a better AI agent.
+  </blockquote>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">NEXUSGUARD</div>
+  <div class="footer-tag">AGENTIC PHISHING &amp; DEEPFAKE DEFENDER · HACKATHON 2025</div>
+  <div class="footer-badge">▲ DEFENDING THE PERIMETER</div>
+</footer>
+
+<script>
+  // ── INTERSECTION OBSERVER for scroll animations ──
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), i * 80);
+      }
+    });
+  }, { threshold: 0.12 });
+
+  document.querySelectorAll(
+    '.problem-card, .feature-card, .pipe-step, .tech-card, .metric-card, .sdg-card, .roadmap-item'
+  ).forEach(el => observer.observe(el));
+
+  // ── GLITCH TEXT on hero h1 ──
+  const h1 = document.querySelector('h1');
+  if (h1) h1.setAttribute('data-text', h1.textContent);
+
+  // ── LIVE THREAT COUNTER ──
+  let count = 2847193;
+  const badge = document.querySelector('.nav-badge');
+  setInterval(() => {
+    count += Math.floor(Math.random() * 7) + 1;
+    badge.textContent = `● ${count.toLocaleString()} THREATS BLOCKED`;
+  }, 1800);
+
+  // ── CURSOR TRAIL ──
+  const canvas = document.createElement('canvas');
+  canvas.style.cssText = 'position:fixed;top:0;left:0;pointer-events:none;z-index:9999;';
+  document.body.appendChild(canvas);
+  const ctx = canvas.getContext('2d');
+  let W = canvas.width = window.innerWidth;
+  let H = canvas.height = window.innerHeight;
+  window.addEventListener('resize', () => { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; });
+  const dots = [];
+  window.addEventListener('mousemove', e => {
+    dots.push({ x: e.clientX, y: e.clientY, life: 1 });
+    if (dots.length > 30) dots.shift();
+  });
+  function drawTrail() {
+    ctx.clearRect(0, 0, W, H);
+    dots.forEach((d, i) => {
+      d.life -= 0.03;
+      if (d.life <= 0) return;
+      ctx.beginPath();
+      ctx.arc(d.x, d.y, 3 * d.life, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(0,212,255,${d.life * 0.5})`;
+      ctx.fill();
+    });
+    requestAnimationFrame(drawTrail);
+  }
+  drawTrail();
+
+  // ── SMOOTH SCROLL for nav links ──
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      document.querySelector(a.getAttribute('href'))?.scrollIntoView({ behavior: 'smooth' });
+    });
+  });
+
+  // ── TERMINAL INTERROGATION SIMULATION ──
+const terminalBody = document.getElementById('terminal-body');
+const terminalStatus = document.getElementById('terminal-status');
+
+const interrogationLogs = [
+    { text: "> Incoming Zoom Stream Detected: ID_8829-X", color: 'var(--white)' },
+    { text: "> Analyzing Stream Integrity...", color: 'var(--cyan)' },
+    { text: "> WARNING: Synthetic Artifacts detected in audio (Pitch Variance < 0.02%)", color: 'var(--red)' },
+    { text: "> Initializing Blue Team Agent Interrogation...", color: 'var(--cyan)' },
+    { text: "> CHALLENGE: Requesting out-of-band PGP handshake...", color: 'var(--white)' },
+    { text: "> SENDER_RESPONSE: Failed secure handshake.", color: 'var(--red)' },
+    { text: "> ACTION: Stream Quarantined. Alerting SOC.", color: 'var(--red)' },
+    { text: "> System state: SECURE", color: 'var(--green)' }
+];
+
+let logIndex = 0;
+function runTerminal() {
+    if (logIndex < interrogationLogs.length) {
+        const line = document.createElement('div');
+        line.style.color = interrogationLogs[logIndex].color;
+        line.style.marginBottom = "5px";
+        line.textContent = interrogationLogs[logIndex].text;
+        terminalBody.appendChild(line);
+        
+        if (line.textContent.includes("WARNING") || line.textContent.includes("ACTION")) {
+            terminalStatus.textContent = "THREAT DETECTED";
+            terminalStatus.style.color = "var(--red)";
+        }
+        
+        logIndex++;
+        setTimeout(runTerminal, 2000);
+    } else {
+        setTimeout(() => {
+            terminalBody.innerHTML = "";
+            logIndex = 0;
+            terminalStatus.textContent = "LISTENING...";
+            terminalStatus.style.color = "var(--green)";
+            runTerminal();
+        }, 5000);
+    }
+}
+runTerminal();
+
+// ── DYNAMIC CARBON-AWARE SCALING ──
+// PPT mentions workload routing to high renewable energy regions
+function updateCloudRegion() {
+    const regions = ["us-central1 (Green)", "europe-west1 (Carbon-Free)", "asia-east1 (Low-Grid)"];
+    const randomRegion = regions[Math.floor(Math.random() * regions.length)];
+    const metricCards = document.querySelectorAll('.metric-label');
+    
+    // Find the carbon card and update the footer or specific text
+    const carbonCard = Array.from(metricCards).find(el => el.textContent.includes("Carbon-Aware"));
+    if (carbonCard) {
+        carbonCard.innerHTML = `Carbon-Aware Scaling<br><span style="color:var(--green)">Active: ${randomRegion}</span>`;
+    }
+}
+setInterval(updateCloudRegion, 4000);
+
+// ── STREAM INTEGRITY DATA STREAM ──
+// PPT mentions monitoring Video/Audio packets
+function createPacketStream() {
+    const stackSection = document.querySelector('#tech');
+    const packet = document.createElement('div');
+    packet.style.cssText = `
+        position: absolute;
+        color: var(--cyan);
+        font-family: 'Share Tech Mono';
+        font-size: 10px;
+        opacity: 0.5;
+        pointer-events: none;
+        z-index: 1;
+        left: ${Math.random() * 100}%;
+        top: -20px;
+    `;
+    packet.textContent = Math.random() > 0.5 ? "PACKET_V_772" : "PACKET_A_991";
+    stackSection.appendChild(packet);
+
+    packet.animate([
+        { transform: 'translateY(0)', opacity: 0.5 },
+        { transform: `translateY(${stackSection.offsetHeight}px)`, opacity: 0 }
+    ], {
+        duration: 3000 + Math.random() * 2000,
+        easing: 'linear'
+    }).onfinish = () => packet.remove();
+}
+setInterval(createPacketStream, 300);
+</script>
+</body>
+</html>
